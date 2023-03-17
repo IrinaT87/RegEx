@@ -1,7 +1,7 @@
+from collections import OrderedDict
 from pprint import pprint
 import csv
 import re
-from collections import OrderedDict
 
 with open('phonebook_raw.csv', 'rt', encoding='utf-8') as f:
   rows = csv.reader(f, delimiter=",")
@@ -34,13 +34,18 @@ for contact in contacts_list:
 
 contacts_list_ok=[]
 
-for i in range(len(contacts_list)-1): 
-  if contacts_list[i][0].strip()!=contacts_list[i+1][0].strip() and contacts_list[i][1].strip()!=contacts_list[i+1][1].strip():
-    contacts_list_ok.append(contacts_list[i])
-  if contacts_list[i][0].strip()==contacts_list[i+1][0].strip():
-    contacts_list_ok.append(list(OrderedDict.fromkeys(contacts_list[i]+contacts_list[i+1])))
-    
-# print(contacts_list_ok)
+for i in range(len(contacts_list)):
+  add_line = True
+  for j in range(len(contacts_list_ok)): 
+   if contacts_list[i][0].strip()==contacts_list_ok[j][0].strip():
+      contacts_list_ok[j] =(list(OrderedDict.fromkeys(contacts_list_ok[j]+contacts_list[i])))
+      add_line = False
+      print(list(OrderedDict.fromkeys(contacts_list_ok[j]+contacts_list[i])))  
+  if add_line:
+      contacts_list_ok.append(contacts_list[i])
+
+
+print(contacts_list_ok)
   
 with open("phonebook.csv", "w", encoding='utf-8',newline='') as f:
   datawriter = csv.writer(f, delimiter=',')
